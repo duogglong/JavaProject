@@ -9,10 +9,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping(value = "/api/home")
+@RequestMapping(value = "/home")
 public class HomeController {
-    @GetMapping
-    public String showAttendees(Model model) {
+    @GetMapping("1")
+    public String home1(Model model) {
+        return "home";
+    }
+
+    @GetMapping("2")
+    public String home2(Model model) {
         return "home";
     }
 }
