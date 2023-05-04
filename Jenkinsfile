@@ -1,43 +1,38 @@
 pipeline {
     agent any
 
+    environment {
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub')
+    }
+
     stages {
         stage('Checkout') {
             steps {
                 checkout scm
             }
         }
-        stage('Build image') {
-            steps {
-                script {
-                    app = docker.build("duogglong/pipeline:${env.BUILD_ID}")
-                    }
-            }
+
+        stage('Build Image') {
+          steps {
+            sh 'docker build -t duogglong/java-spring .'
+          }
         }
 
-        stage('Push image') {
-            steps {
-                script {
-                    withCredentials( \
-                                 [string(credentialsId: 'dockerhub',\
-                                 variable: 'dockerhub')]) {
-                        sh "docker login -u duogglong -p ${dockerhub}"
-                    }
-                    app.push("${env.BUILD_ID}")
-                 }
-
-            }
+        stage('Login Docker') {
+          steps {
+            sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+          }
         }
 
-        stage('Test') {
-            steps {
-                echo 'Testing..'
-            }
+        stage('Push Image') {
+          steps {
+            sh 'docker push duogglong/java-spring'
+          }
         }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying....'
-            }
+    }
+    post {
+        always {
+          sh 'docker logout'
         }
     }
 }
