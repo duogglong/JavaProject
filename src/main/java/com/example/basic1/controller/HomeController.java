@@ -11,13 +11,13 @@ import java.util.List;
 @Controller
 @RequestMapping(value = "/home")
 public class HomeController {
-    @GetMapping("1")
+    @GetMapping("/1")
     public String home1(Model model) {
         return "home";
     }
 
-    @GetMapping("2")
+    @GetMapping("/2")
     public String home2(Model model) {
-        return "home";
+        return "home2";
     }
 }
