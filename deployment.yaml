@@ -15,7 +15,7 @@ spec:
         run: my-app-java-dev
     spec:
       containers:
-        - image: duogglong/java-spring
+        - image: duogglong/java-spring:latest
           name: my-app-java-dev
           ports:
             - containerPort: 80

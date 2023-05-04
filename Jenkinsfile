@@ -5,7 +5,7 @@ pipeline {
         PROJECT_ID = 'ci-cd-gcp-k8s-imey'
         CLUSTER_NAME = 'cluster-1'
         LOCATION = 'asia-east1-a'
-        CREDENTIALS_ID = 'GCP-cer'
+        CREDENTIALS_ID = 'k8s'
     }
 
     stages {
