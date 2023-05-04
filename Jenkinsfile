@@ -1,6 +1,7 @@
 pipeline {
     agent any
     environment {
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub')
         PROJECT_ID = 'ci-cd-gcp-k8s-imey'
         CLUSTER_NAME = 'cluster-1'
         LOCATION = 'asia-east1-a'
@@ -23,11 +24,7 @@ pipeline {
         stage('Push image') {
             steps {
                 script {
-                    withCredentials( \
-                                 [string(credentialsId: 'dockerhub',\
-                                 variable: 'dockerhub')]) {
-                        sh "docker login -u duogglong -p ${dockerhub}"
-                    }
+                    sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
                     app.push("${env.BUILD_ID}")
                  }
 
@@ -47,6 +44,11 @@ pipeline {
                   credentialsId: env.CREDENTIALS_ID, \
                   verifyDeployments: true])
             }
+        }
+    }
+    post {
+        always {
+          sh 'docker logout'
         }
     }
 }
