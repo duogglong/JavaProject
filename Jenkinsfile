@@ -47,7 +47,6 @@ pipeline {
                   manifestPattern: 'deployment.yaml', \
                   credentialsId: env.CREDENTIALS_ID, \
                   verifyDeployments: true])
-                }
             }
         }
     }
