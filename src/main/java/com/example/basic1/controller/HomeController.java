@@ -18,7 +18,7 @@ public class HomeController {
 
     @GetMapping("/2")
     public String home2(Model model) {
-        log.info("Call api HomeController.home2");
+        log.info("Call api HomeController.home2 sdfsd");
         return "home2";
     }
 }
