@@ -29,6 +29,8 @@ pipeline {
             sh 'docker push duogglong/java-spring'
           }
         }
+
+
     }
     post {
         always {
