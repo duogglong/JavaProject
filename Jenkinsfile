@@ -39,7 +39,7 @@ pipeline {
                 echo "Deployment started ..."
                 sh 'ls -ltr'
                 sh 'pwd'
-                sh "sed -i 's/duogglong/java-spring:latest/duogglong/java-spring:latest/g' deployment.yaml"
+                sh "sed -i 's#duogglong/java-spring:latest#duogglong/java-spring:latest#g' deployment.yaml"
                 step([$class: 'KubernetesEngineBuilder', \
                   projectId: env.PROJECT_ID, \
                   clusterName: env.CLUSTER_NAME, \
