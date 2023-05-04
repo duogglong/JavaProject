@@ -18,38 +18,34 @@ pipeline {
 
         stage('Build Image') {
           steps {
-            app = docker.build("duogglong/java-spring:${env.BUILD_ID}")
+            sh 'docker build -t duogglong/java-spring .'
           }
         }
 
-        stage('Push image') {
-            steps {
-                script {
-                    withCredentials( \
-                                 [string(credentialsId: 'dockerhub',\
-                                 variable: 'dockerhub')]) {
-                        sh "docker login -u duogglong -p ${dockerhub}"
-                    }
-                    app.push("${env.BUILD_ID}")
-                 }
-
-            }
+        stage('Login Docker') {
+          steps {
+            sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+          }
         }
 
-        stage('Deploy to K8s') {
-            steps{
-                echo "Deployment started ..."
-                sh 'ls -ltr'
-                sh 'pwd'
-                sh "sed -i 's/duogglong/java-spring:latest#duogglong/java-spring:${env.BUILD_ID}/g' deployment.yaml"
-                step([$class: 'KubernetesEngineBuilder', \
-                  projectId: env.PROJECT_ID, \
-                  clusterName: env.CLUSTER_NAME, \
-                  location: env.LOCATION, \
-                  manifestPattern: 'deployment.yaml', \
-                  credentialsId: env.CREDENTIALS_ID, \
-                  verifyDeployments: true])
+        stage('Push Image') {
+          steps {
+            sh 'docker push duogglong/java-spring'
+          }
+        }
+
+        stage('Update Deployment Image ') {
+          steps {
+            withCredentials([kubeconfigFile(credentialsId: 'GCP-cer', variable: 'KUBECONFIG')]) {
+//               sh 'kubectl config use-context <context-name>'
+              sh 'kubectl set image deployment/my-app-java-dev my-app-java-dev=duogglong/java-spring:latest --kubeconfig $KUBECONFIG'
             }
+          }
+        }
+    }
+    post {
+        always {
+          sh 'docker logout'
         }
     }
 }
