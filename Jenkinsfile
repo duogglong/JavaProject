@@ -9,6 +9,12 @@ pipeline {
     }
 
     stages {
+        stage('test') {
+            steps {
+                sh 'pwd'
+            }
+        }
+
         stage('Checkout') {
             steps {
                 checkout scm
