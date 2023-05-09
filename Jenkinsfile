@@ -9,9 +9,10 @@ pipeline {
     }
 
     stages {
-        stage('test') {
+        stage('Clear cache Docker') {
             steps {
-                sh 'pwd'
+                sh 'docker builder prune -f'
+                sh 'docker image prune -f'
             }
         }
 
