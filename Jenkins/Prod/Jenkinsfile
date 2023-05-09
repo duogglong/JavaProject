@@ -1,45 +1,48 @@
 pipeline {
     agent any
-
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub')
         PROJECT_ID = 'ci-cd-gcp-k8s-imey'
         CLUSTER_NAME = 'cluster-1'
         LOCATION = 'asia-east1-a'
-        CREDENTIALS_ID = 'GCP-cer'
+        CREDENTIALS_ID = 'gke'
     }
 
     stages {
+        stage('Clear cache Docker') {
+            steps {
+                sh 'docker builder prune -f'
+                sh 'docker image prune -f'
+            }
+        }
+
         stage('Checkout') {
             steps {
                 checkout scm
             }
         }
-
-        stage('Build Image') {
-          steps {
-            sh 'docker build -t duogglong/java-spring .'
-          }
+        stage('Build image') {
+            steps {
+                script {
+                    app = docker.build("duogglong/java-spring-prod:${env.BUILD_ID}")
+                    }
+            }
         }
+        stage('Push image') {
+            steps {
+                script {
+                    sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                    app.push("${env.BUILD_ID}")
+                 }
 
-        stage('Login Docker') {
-          steps {
-            sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-          }
+            }
         }
-
-        stage('Push Image') {
-          steps {
-            sh 'docker push duogglong/java-spring'
-          }
-        }
-
         stage('Deploy to K8s') {
             steps{
                 echo "Deployment started ..."
                 sh 'ls -ltr'
                 sh 'pwd'
-                sh "sed -i 's#duogglong/java-spring:latest#duogglong/java-spring:latest#g' deployment.yaml"
+                sh "sed -i 's/java-spring:latest/java-spring:${env.BUILD_ID}/g' deployment.yaml"
                 step([$class: 'KubernetesEngineBuilder', \
                   projectId: env.PROJECT_ID, \
                   clusterName: env.CLUSTER_NAME, \
