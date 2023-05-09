@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: my-app-java-staging
+  name: my-app-java-staging
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      run: my-app-java-staging
+  template:
+    metadata:
+      labels:
+        run: my-app-java-staging
+    spec:
+      containers:
+        - image: duogglong/java-spring-staging:latest
+          name: my-app-java-staging
+          ports:
+            - containerPort: 80
