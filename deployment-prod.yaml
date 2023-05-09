@@ -2,20 +2,20 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    run: my-app-java-dev
-  name: my-app-java-dev
+    run: my-app-java-prod
+  name: my-app-java-prod
 spec:
   replicas: 2
   selector:
     matchLabels:
-      run: my-app-java-dev
+      run: my-app-java-prod
   template:
     metadata:
       labels:
-        run: my-app-java-dev
+        run: my-app-java-prod
     spec:
       containers:
-        - image: duogglong/java-spring:latest
-          name: my-app-java-dev
+        - image: duogglong/java-spring-prod:latest
+          name: my-app-java-prod
           ports:
             - containerPort: 80
