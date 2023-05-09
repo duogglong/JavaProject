@@ -53,6 +53,13 @@ pipeline {
                   verifyDeployments: true])
             }
         }
+        stage('Clear cache Docker') {
+            steps {
+                sh 'docker builder prune -f'
+                sh 'docker image prune -f'
+                sh 'docker rmi $(docker images -aq)'
+            }
+        }
     }
     post {
         always {

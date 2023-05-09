@@ -9,14 +9,6 @@ pipeline {
     }
 
     stages {
-        stage('Clear cache Docker') {
-            steps {
-                sh 'docker builder prune -f'
-                sh 'docker image prune -f'
-                sh 'docker rmi $(docker images -aq)'
-            }
-        }
-
         stage('Checkout') {
             steps {
                 checkout scm
@@ -51,6 +43,13 @@ pipeline {
                   manifestPattern: 'deployment-prod.yaml', \
                   credentialsId: env.CREDENTIALS_ID, \
                   verifyDeployments: true])
+            }
+        }
+        stage('Clear cache Docker') {
+            steps {
+                sh 'docker builder prune -f'
+                sh 'docker image prune -f'
+                sh 'docker rmi $(docker images -aq)'
             }
         }
     }
