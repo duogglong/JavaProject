@@ -24,7 +24,7 @@ pipeline {
         stage('Build image') {
             steps {
                 script {
-                    app = docker.build("duogglong/java-spring:${env.BUILD_ID}")
+                    app = docker.build("duogglong/java-spring-dev:${env.BUILD_ID}")
                     }
             }
         }
