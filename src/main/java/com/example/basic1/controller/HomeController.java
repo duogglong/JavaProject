@@ -10,15 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping(value = "/home")
 @Slf4j
 public class HomeController {
-//    @GetMapping("/1")
-//    public String home1(Model model) {
-//        log.info("Call api HomeController.home1");
-//        return "home";
-//    }
-
     @GetMapping
     public String home(Model model) {
         log.info("Call api HomeController.home");
-        return "home2";
+        return "index";
     }
 }
