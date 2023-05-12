@@ -9,11 +9,6 @@ pipeline {
     }
 
     stages {
-        stage('pwd') {
-            steps {
-                sh 'pwd'
-            }
-        }
         stage('Checkout') {
             steps {
                 checkout scm
@@ -29,7 +24,6 @@ pipeline {
         stage('Push image') {
             steps {
                 script {
-                    sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
                     app.push("${env.BUILD_ID}")
                  }
 
@@ -53,8 +47,6 @@ pipeline {
         stage('Clear cache Docker') {
             steps {
                 sh 'docker builder prune -f'
-                sh 'docker image prune -f'
-                sh 'docker rmi $(docker images -aq)'
             }
         }
     }
