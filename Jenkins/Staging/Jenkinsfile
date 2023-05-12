@@ -9,14 +9,9 @@ pipeline {
     }
 
     stages {
-        stage('pwd') {
+        stage('Print working directory') {
             steps {
                 sh 'pwd'
-            }
-        }
-        stage('Checkout') {
-            steps {
-                checkout scm
             }
         }
         stage('Build image') {
@@ -53,7 +48,6 @@ pipeline {
         stage('Clear cache Docker') {
             steps {
                 sh 'docker builder prune -f'
-                sh 'docker rmi $(docker images -aq)'
             }
         }
     }
