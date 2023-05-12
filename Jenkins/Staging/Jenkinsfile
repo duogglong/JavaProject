@@ -9,11 +9,6 @@ pipeline {
     }
 
     stages {
-        stage('Print working directory') {
-            steps {
-                sh 'pwd'
-            }
-        }
         stage('Build image') {
             steps {
                 script {
@@ -24,7 +19,6 @@ pipeline {
         stage('Push image') {
             steps {
                 script {
-                    sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
                     app.push("${env.BUILD_ID}")
                  }
 
