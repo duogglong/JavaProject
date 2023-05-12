@@ -9,11 +9,6 @@ pipeline {
     }
 
     stages {
-        stage('Print working directory') {
-            steps {
-                sh 'pwd'
-            }
-        }
         stage('Checkout') {
             steps {
                 checkout scm
