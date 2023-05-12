@@ -9,9 +9,9 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
+        stage('Print working directory') {
             steps {
-                checkout scm
+                sh 'pwd'
             }
         }
         stage('Build image') {
